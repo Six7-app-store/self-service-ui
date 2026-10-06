@@ -1,0 +1,39 @@
+# Local login proxy for the App Store section (see APP-STORE.md).
+#
+# Signs in against the dev Keycloak of the app-store deployment stack and
+# injects the user's ACCESS token as the bearer the FastAPI backend expects.
+# The ID token, which oauth2-proxy passes by default, is refused there.
+#
+# Runs on the host, not in Docker: browser and proxy must reach Keycloak under
+# the same address (localhost:8080), or the token's issuer and the login
+# redirect disagree.
+server:
+  BindAddress: 127.0.0.1:4180
+upstreamConfig:
+  upstreams:
+    # The dev server hands /api/app-store/* over unchanged; the backend knows
+    # its routes without the prefix.
+    - id: app-store-backend
+      path: ^/api/app-store/(.*)$
+      rewriteTarget: /$1
+      uri: http://localhost:8000
+injectRequestHeaders:
+  - name: Authorization
+    values:
+      - claimSource:
+          claim: access_token
+          prefix: "Bearer "
+providers:
+  - id: keycloak
+    provider: keycloak-oidc
+    # The public client of the existing App Store frontend; it needs
+    # http://localhost:8084/* as a redirect URI. A public client has no secret,
+    # Keycloak ignores the value — oauth2-proxy just insists on one.
+    clientID: appstore-frontend
+    clientSecret: public-client-no-secret
+    code_challenge_method: S256
+    oidcConfig:
+      issuerURL: http://localhost:8080/realms/dhbw
+      insecureAllowUnverifiedEmail: true
+      emailClaim: email
+      audienceClaims: [aud, azp]

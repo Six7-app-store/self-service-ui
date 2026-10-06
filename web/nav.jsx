@@ -4,6 +4,7 @@ import { appStoreEnabled, apiTokensEnabled, cloudProjectsEnabled, dnsZonesEnable
 import { TOKEN_SCOPES, tokenScopeLabel, tokenScopePath } from '/tokens/scopes.js';
 import { useCloudStatus } from '/projects/cloud-status.jsx';
 import { useDnsPolicyStatus } from '/dyndns/use-policy.jsx';
+import { useRole } from '/app-store/queries.jsx';
 
 // The whole navigation as data, in one place: the header renders it two ways
 // (two bars on a wide screen, one vertical list in the burger) and the shell
@@ -19,10 +20,18 @@ export const HEADER_HEIGHT = 60;
 // hence the modest number.
 export const SUBNAV_HEIGHT = 40;
 
-// Below this the navigation goes into the burger. Five categories plus the
-// language switch and account need the lg breakpoint before the row fits, and a
-// wrapped header looks broken long before it becomes unusable.
-export const NAV_BREAKPOINT = 'lg';
+// Below this the navigation goes into the burger. Deliberately not Mantine's
+// `sm` (768px): three categories plus a signed-in user with a long address need
+// about 900px before the row starts wrapping, and a wrapped header looks broken
+// long before it becomes unusable.
+//
+// Only when all four optional sections are on is the row too wide for `md`.
+// The sections are fixed by config.js, so this is decided once at load — and
+// the usual deployments, which run one or two of them, keep the full header
+// down to `md` instead of losing it to the burger for everyone.
+const OPTIONAL_SECTIONS = [cloudProjectsEnabled, dnsZonesEnabled, apiTokensEnabled, appStoreEnabled]
+    .filter(Boolean).length;
+export const NAV_BREAKPOINT = OPTIONAL_SECTIONS > 3 ? 'lg' : 'md';
 
 // useNav returns the sections the current user may see, plus which section and
 // item the current URL is in. Availability is decided here so no caller has to
@@ -35,6 +44,7 @@ export function useNav() {
     const { t } = useTranslation();
     const { isRoot, pending, hasBudgets } = useCloudStatus();
     const { hasPolicy } = useDnsPolicyStatus();
+    const { staff: appStoreStaff } = useRole();
 
 
 
@@ -87,10 +97,14 @@ export function useNav() {
             items: TOKEN_SCOPES.map(s => ({ label: tokenScopeLabel(s, t), href: tokenScopePath(s) })),
         },
         appStoreEnabled && {
-            id: 'app-store', label: t('nav.appStore'), base: '/app-store',
+            id: 'app-store',
+            label: t('nav.appStore'),
+            base: '/app-store',
             items: [
                 { label: t('appStore.catalog'), href: '/app-store/apps' },
-                { label: t('appStore.deployments'), href: '/app-store/deployments' },
+                // The same list either way; a student only ever sees the
+                // environments a teacher gave them access to.
+                { label: t(appStoreStaff ? 'appStore.deployments' : 'appStore.myEnvironments'), href: '/app-store/deployments' },
             ],
         },
     ].filter(Boolean).map(s => ({ ...s, href: s.href ?? s.items[0]?.href ?? '/' }));

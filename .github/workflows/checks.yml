@@ -34,9 +34,44 @@ jobs:
       - name: ESLint
         run: npm run lint
 
-      # Unit tests, pure functions only — no DOM, no rendering. Runs even when
+      # Unit tests and the jsdom render tests (*.test.jsx). Runs even when
       # the lint step failed, so one push reports both problems instead of
       # hiding the second behind the first.
       - name: Vitest
         if: '!cancelled()'
         run: npm test
+
+  # Browser tests of the App Store section (e2e/), against intercepted API
+  # answers. A job of its own: it needs a browser download the checks above
+  # do not, and a failure here should not hide theirs.
+  e2e:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Playwright
+        run: npm run test:e2e
+
+      - name: Keep screenshots and traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: test-results/
+          retention-days: 7

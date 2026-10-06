@@ -45,12 +45,13 @@ const CONFIG = {
     dummyDevUsers: [],
 };
 
-export function renderView(ui, { config = CONFIG, user = USER } = {}) {
+// `auth` adds fields to the auth context, e.g. { useDummyAuth: true }.
+export function renderView(ui, { config = CONFIG, user = USER, auth = {} } = {}) {
     const client = testQueryClient();
     const result = render(
         <MantineProvider>
             <QueryClientProvider client={client}>
-                <AuthContext.Provider value={{ user, loading: false }}>
+                <AuthContext.Provider value={{ user, loading: false, ...auth }}>
                     <ErrorModalProvider>
                         <ConfirmProvider>
                             <ProjectConfigContext.Provider value={config}>

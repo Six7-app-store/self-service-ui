@@ -1,5 +1,7 @@
 # --- Stage 1: Builder
-FROM node:alpine AS builder
+# Pinned to a major, so a new Node release cannot change the build under an
+# unchanged lockfile. 24 because jsdom and undici need >=22.22 / >=24.15.
+FROM node:24-alpine AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -7,8 +9,10 @@ WORKDIR /app
 # Copy package.json and package-lock.json first to take advantage of Docker caching
 COPY package.json package-lock.json ./
 
-# Install project dependencies
-RUN npm install
+# Install exactly what package-lock.json pins; fails if the two disagree,
+# which is the point — a lockfile out of step with package.json once broke
+# every build of this image.
+RUN npm ci
 
 # Copy the rest of the source code (including 'web' directory)
 COPY . .

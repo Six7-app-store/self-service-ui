@@ -56,7 +56,19 @@
         "cloudResourcesMcpUrl": { "type": "string" },
         "acmeServer": { "type": "string" },
         "dynamicZonesUpstream": { "type": "string" },
-        "cloudResourcesUpstream": { "type": "string" }
+        "cloudResourcesUpstream": { "type": "string" },
+        "appStore": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "upstream": { "type": "string" },
+            "baseUrl": { "type": "string" },
+            "frontendUrl": { "type": "string" }
+          },
+          "if": { "properties": { "enabled": { "const": true } } },
+          "then": { "required": ["upstream"], "properties": { "upstream": { "minLength": 1 } } }
+        }
       }
     },
     "auth": {

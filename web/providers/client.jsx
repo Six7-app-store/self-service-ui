@@ -32,7 +32,7 @@ const CLIENTS = { projects: projectsClient, dyndns: dyndnsClient };
 // happen before any effect has run (child effects precede parent ones). In BFF
 // mode the token is null anyway; what actually matters here is the dev identity,
 // without which the very first call in a dev session would go out unauthenticated.
-const useDummyAuth = __DEV__ && window.appconfig?.dummyAuth === true;
+const useDummyAuth = import.meta.env.DEV && window.appconfig?.dummyAuth === true;
 const session = {
     token: null,
     useDummyAuth,

@@ -42,7 +42,9 @@
 
     handle_path /api/app-store/* {
         header Cache-Control "no-store"
-        reverse_proxy {$APP_STORE_UPSTREAM:backend:8000}
+        # No default, unlike the two above: docker-entrypoint.sh requires the
+        # variable while the App Store is enabled.
+        reverse_proxy {$APP_STORE_UPSTREAM}
     }
 
     # Everything else: the SPA (with client-side routing fallback to index.html).

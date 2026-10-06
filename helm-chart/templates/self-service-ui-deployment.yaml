@@ -76,6 +76,14 @@ spec:
             - name: CLOUD_RESOURCES_UPSTREAM
               value: "{{ .Values.selfServiceUI.cloudResourcesUpstream }}"
             {{- end }}
+            - name: APP_STORE_ENABLED
+              value: "{{ .Values.selfServiceUI.appStore.enabled }}"
+            - name: APP_STORE_UPSTREAM
+              value: "{{ .Values.selfServiceUI.appStore.upstream }}"
+            - name: APP_STORE_BASE_URL
+              value: "{{ .Values.selfServiceUI.appStore.baseUrl }}"
+            - name: APP_STORE_FRONTEND_URL
+              value: "{{ .Values.selfServiceUI.appStore.frontendUrl }}"
             - name: OIDC_ISSUER_URL
               value: "{{ .Values.auth.oidc.issuerUrl  }}"
             - name: OIDC_CLIENT_ID

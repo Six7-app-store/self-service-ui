@@ -22,9 +22,9 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const [devUser, setDevUser] = useState(null);
     // Build-time floor dummy auth (impersonate any user by email) can ONLY
-    // be active in a dev build. `__DEV__` is false in every `npm run build`
+    // be active in a dev build. `import.meta.env.DEV` is false in every `vite build`
     // artifact (staging/prod images), so no runtime config can re-enable the bypass.
-    const useDummyAuth = __DEV__ && window.appconfig?.dummyAuth === true;
+    const useDummyAuth = import.meta.env.DEV && window.appconfig?.dummyAuth === true;
     const urlParams = new URLSearchParams(window.location.search);
     const emailParam = urlParams.get('dev_user');
 

@@ -4,7 +4,7 @@ DOCKERFILE_NAME := Dockerfile
 
 # Extract version from package.json. Requires 'jq' utility.
 DOCKER_TAG := $(shell jq -r .version package.json)
-DOCKER_REPO ?= ghcr.io/pfisterer/$(PROJECT_NAME)
+DOCKER_REPO ?= ghcr.io/six7-app-store/$(PROJECT_NAME)
 DOCKER_PLATFORMS ?= linux/amd64,linux/arm64
 
 # --- Targets ---

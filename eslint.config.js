@@ -25,9 +25,8 @@ export default [
             parserOptions: { ecmaFeatures: { jsx: true } },
             globals: {
                 ...globals.browser,
-                // Injected by Webpack DefinePlugin.
+                // Injected by Vite's `define` (see vite.config.js).
                 __APP_VERSION__: 'readonly',
-                __DEV__: 'readonly',
             },
         },
         plugins: { 'react-hooks': reactHooks },

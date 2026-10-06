@@ -12,7 +12,8 @@ selfServiceUI:
   hostname: "self-service-ui.example.com"
   replicas: 1
   imagePullPolicy: "Always"
-  image: "ghcr.io/pfisterer/self-service-ui"
+  # The fork's images (private: pulling needs registry credentials).
+  image: "ghcr.io/six7-app-store/self-service-ui"
   # Empty -> the chart\'s appVersion is used (see the deployment template).
   version: ""
   dynamicZonesBaseUrl: https://dyndnsapi.example.com
@@ -36,6 +37,21 @@ selfServiceUI:
   # default applies.
   dynamicZonesUpstream: ""
   cloudResourcesUpstream: ""
+  # DHBW App Store section (see APP-STORE.md).
+  appStore:
+    # Off by default in the chart: switching it on needs `upstream`, which
+    # only the environment knows. false hides the tab and its routes.
+    enabled: false
+    # In-cluster host:port of the App Store backend (FastAPI). Required while
+    # enabled: the container refuses to start without it rather than guess a
+    # Service name another release owns.
+    upstream: ""
+    # Browser path of the API; the proxy in front must inject the bearer here.
+    baseUrl: /api/app-store
+    # Address of the existing App Store frontend, for everything this UI hands
+    # over (course and team assignment, variables, app management). Empty
+    # shows a hint instead of a link.
+    frontendUrl: ""
 
 #------------------------------------
 # OIDC/Auth Configuration
@@ -101,6 +117,6 @@ bff:
   # belongs here, or RP-initiated logout cannot reach its end-session endpoint.
   whitelistDomains: []
   ingress:
-    enabled: true
+    enabled: false
     className: traefik
     annotations: {}
