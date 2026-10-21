@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { appStoreEnabled } from '/features.js';
 import { useApiMutation } from '/helper/query-state.jsx';
 import { useAuth } from '/providers/auth.jsx';
@@ -115,14 +115,18 @@ export function useDeployments() {
     });
 }
 
-export function useMyAccess(deploymentId, enabled) {
+// One my-access query per deployment, in the order given. My Access asks only
+// for deployed ones: before that there are no machines and nothing to return.
+export function useMyAccessList(deploymentIds) {
     const api = useAppStoreApi();
     const userKey = useUserKey();
-    return useQuery({
-        queryKey: [ROOT, userKey, 'my-access', deploymentId],
-        queryFn: ({ signal }) => api.myAccess(deploymentId, signal),
-        enabled: Boolean(enabled && userKey && deploymentId),
-        retry: false,
+    return useQueries({
+        queries: deploymentIds.map(deploymentId => ({
+            queryKey: [ROOT, userKey, 'my-access', deploymentId],
+            queryFn: ({ signal }) => api.myAccess(deploymentId, signal),
+            enabled: Boolean(userKey),
+            retry: false,
+        })),
     });
 }
 

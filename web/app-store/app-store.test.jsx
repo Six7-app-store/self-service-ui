@@ -6,8 +6,9 @@ import { renderView } from '/test/render-harness.jsx';
 import { Catalog } from './catalog.jsx';
 import { AppDetail } from './app-detail.jsx';
 import { Deployments } from './deployments.jsx';
+import { MyAccess } from './my-access.jsx';
 
-// Render smoke tests for the three App Store views, against a fetch that
+// Render smoke tests for the App Store views, against a fetch that
 // answers like the backend. They check that each view renders and that the
 // role decides what it offers — not what it looks like.
 
@@ -78,13 +79,45 @@ describe('App Store views', () => {
         expect(screen.queryByRole('button', { name: /Deploy now/ })).toBeNull();
     });
 
-    it('shows a student their own credentials', async () => {
+    it('points a student from their environments to My Access', async () => {
         vi.stubGlobal('fetch', backend('student'));
         renderView(<Deployments />);
         expect(await screen.findByRole('heading', { name: 'My environments' })).toBeTruthy();
-        fireEvent.click(await screen.findByRole('button', { name: /Credentials/ }));
+        expect((await screen.findByRole('link', { name: /Credentials/ })).getAttribute('href')).toBe('/my-access');
+    });
+
+    it('shows the own credentials under My Access', async () => {
+        vi.stubGlobal('fetch', backend('student'));
+        renderView(<MyAccess />);
+        expect(await screen.findByRole('heading', { name: 'My Access' })).toBeTruthy();
+        expect(await screen.findByRole('heading', { name: 'Linux course' })).toBeTruthy();
         expect(await screen.findByText('anna')).toBeTruthy();
         expect(screen.getByText('10.0.0.5:22')).toBeTruthy();
+    });
+
+    it('leaves out deployments that are not the user\'s or not deployed yet', async () => {
+        const fetch = backend('teacher', {
+            '/api/app-store/deployments/': [
+                ...DEPLOYMENTS,
+                { deploymentId: 'd2', appId: 'lab', name: 'Someone else\'s lab', status: 'success' },
+                { deploymentId: 'd3', appId: 'ubuntu', name: 'Still deploying', status: 'running' },
+            ],
+        });
+        vi.stubGlobal('fetch', fetch);
+        renderView(<MyAccess />);
+        expect(await screen.findByText('anna')).toBeTruthy();
+        // d2 answers 404 (not in the routes): not the user's, so not shown.
+        await vi.waitFor(() => expect(fetch.mock.calls.some(([url]) => url.includes('/d2/my-access'))).toBe(true));
+        expect(screen.queryByText('Someone else\'s lab')).toBeNull();
+        // d3 has no machines yet: not even asked.
+        expect(fetch.mock.calls.some(([url]) => url.includes('/d3/my-access'))).toBe(false);
+        expect(screen.queryByText('Still deploying')).toBeNull();
+    });
+
+    it('says so when there are no credentials yet', async () => {
+        vi.stubGlobal('fetch', backend('student', { '/api/app-store/deployments/': [] }));
+        renderView(<MyAccess />);
+        expect(await screen.findByText('No credentials yet')).toBeTruthy();
     });
 
     it('explains a refused dev login instead of reporting an expired session', async () => {

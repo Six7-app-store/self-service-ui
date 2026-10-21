@@ -10,7 +10,8 @@ bleibt erhalten; was dieser Bereich nicht selbst kann, übergibt er per Link dor
 | --- | --- | --- |
 | `/app-store/apps` | Katalog mit Suche, Sichtbarkeitsfilter, Sortierung; Link „Apps verwalten“ | Katalog |
 | `/app-store/apps/:id` | Details und **Bereitstellen mit einem Klick** | Details und Hinweis, wo ihre Umgebungen erscheinen |
-| `/app-store/deployments` | „Deployments“: Status, Link „Deployment verwalten“ | „Meine Umgebungen“: Status und **eigene Zugangsdaten** |
+| `/app-store/deployments` | „Deployments“: Status, Link „Deployment verwalten“ | „Meine Umgebungen“: Status, Link nach „My Access“ |
+| `/app-store/my-access` | „My Access“: **eigene Zugangsdaten** | „My Access“: **eigene Zugangsdaten** |
 
 Die Rolle kommt aus `GET /users/me` des App-Store-Backends. Das UI blendet nur
 aus, was das Backend ohnehin ablehnen würde (`role_required`); durchgesetzt wird
@@ -23,9 +24,14 @@ Standardwert, eine Datei oder Werte je Team oder Person, verweist es auf den
 Assistenten des bestehenden App-Stores. Fehlen OpenStack-Zugangsdaten (HTTP 412),
 führt ein Link zu deren Pflege.
 
-**Zugangsdaten** kommen aus `GET /deployments/:id/my-access` und werden erst
-geladen, wenn der Dialog geöffnet wird. Passwörter bleiben bis zum Aufdecken
-maskiert.
+**Zugangsdaten** stehen an genau einer Stelle: „My Access“. Die Seite fragt
+`GET /deployments/:id/my-access` für jedes Deployment ab, das fertig
+bereitgestellt ist (`success` oder pausiert); vorher gibt es keine Maschinen und
+nichts abzufragen. Weil die Deployment-Liste während einer Bereitstellung
+nachlädt, erscheinen die Daten nach dem Deployment von selbst. Antwortet das
+Backend mit 403 oder 404, gehört das Deployment nicht der angemeldeten Person
+und wird ausgelassen – es wird nichts angezeigt, wofür sie nicht berechtigt ist;
+durchgesetzt wird das vom Backend. Passwörter bleiben bis zum Aufdecken maskiert.
 
 Weiterhin im bestehenden App-Store: Kurs- und Teamzuordnung, Eingaben und
 Dateien, App-Verwaltung, Freigaben, LTI und die Detailansicht eines Deployments
