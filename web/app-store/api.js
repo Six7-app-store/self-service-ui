@@ -162,6 +162,14 @@ export function isTransitional(status) {
     return TRANSITIONAL.has(status);
 }
 
+// States in which a deployment's machines exist, so my-access has something to
+// return. Before (pending, running) or after (destroyed, failed) there is none.
+const DEPLOYED = new Set(['success', 'pausing', 'paused', 'resuming', 'pause_failed', 'resume_failed']);
+
+export function isDeployed(status) {
+    return DEPLOYED.has(status);
+}
+
 // statusColor maps a status to a badge colour. `status` comes from the latest
 // task and is null for a deployment that has none yet.
 export function statusColor(status) {
@@ -235,4 +243,14 @@ export function accessEntries(access) {
             secretIsKey: account.type === 'ssh_key',
         };
     });
+}
+
+/**
+ * accessDenied says whether a failed my-access request means "not yours": the
+ * backend answers 403 for a deployment the user has no account in, and 404 for
+ * one that is gone. My Access leaves those out instead of reporting an error —
+ * a teacher's deployment list holds every deployment, most of them not theirs.
+ */
+export function accessDenied(error) {
+    return error?.status === FORBIDDEN || error?.status === NOT_FOUND;
 }

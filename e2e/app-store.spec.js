@@ -61,7 +61,7 @@ test('teacher: catalog, search, details, one-click deploy and direct reload', as
     expect(errors).toEqual([]);
 });
 
-test('student: no deploy form, own environments with credentials', async ({ page }) => {
+test('student: no deploy form, credentials under My Access', async ({ page }) => {
     await mockBackend(page, 'student');
     await page.goto('/app-store/apps/ubuntu');
     await expect(page.getByText(/Umgebungen richten deine Lehrenden ein/)).toBeVisible();
@@ -69,9 +69,17 @@ test('student: no deploy form, own environments with credentials', async ({ page
 
     await page.getByRole('link', { name: 'Meine Umgebungen', exact: true }).first().click();
     await expect(page.getByRole('heading', { name: 'Meine Umgebungen' })).toBeVisible();
-    await page.getByRole('button', { name: 'Zugangsdaten' }).click();
+    await page.getByRole('link', { name: 'Zugangsdaten' }).click();
+    await expect(page).toHaveURL(/\/app-store\/my-access$/);
+    await expect(page.getByRole('heading', { name: 'My Access' })).toBeVisible();
     await expect(page.getByText('anna')).toBeVisible();
     await expect(page.getByText('10.0.0.5:22')).toBeVisible();
+
+    // The same place from the menu, and after a reload.
+    await page.goto('/app-store/apps');
+    await page.getByRole('link', { name: 'My Access', exact: true }).first().click();
+    await page.reload();
+    await expect(page.getByText('anna')).toBeVisible();
 });
 
 test('mobile catalog has no horizontal overflow', async ({ page }) => {

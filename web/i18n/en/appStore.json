@@ -3,6 +3,7 @@
     "catalog": "App catalog",
     "deployments": "Deployments",
     "myEnvironments": "My environments",
+    "myAccess": "My Access",
     "introStaff": "Discover applications for learning and teaching and deploy them in the DHBW cloud.",
     "introStudent": "Applications your lecturers can set up for you in the DHBW cloud.",
     "search": "Search apps",
@@ -39,7 +40,7 @@
     "manage": "Manage apps",
     "missingLink": "The existing App Store address has not been configured yet.",
     "deploymentIntroStaff": "The status of your deployments. While one is still in progress, this view refreshes by itself.",
-    "deploymentIntroStudent": "Environments your lecturers gave you access to, with your credentials.",
+    "deploymentIntroStudent": "Environments your lecturers gave you access to. Your credentials are under “My Access”.",
     "noDeployments": "No environments yet",
     "noDeploymentsHintStaff": "Pick an app in the catalog to start a deployment.",
     "noDeploymentsHintStudent": "As soon as someone adds you to an environment, it appears here.",
@@ -75,7 +76,7 @@
         "submit": "Deploy now",
         "hint": "Without teams or inputs, just for you.",
         "noVersions": "No deployable versions are available: either none has been approved yet, or the backend cannot reach the app's repository.",
-        "studentHint": "Your lecturers set environments up. Once you have access, you find them with your credentials under “My environments”.",
+        "studentHint": "Your lecturers set environments up. Once one is deployed, you find your credentials under “My Access”.",
         "credentialsMissingTitle": "OpenStack access missing",
         "credentialsMissing": "Deploying needs your OpenStack credentials on file.",
         "openCredentials": "Add credentials",
@@ -83,13 +84,14 @@
         "failed": "Deployment failed"
     },
     "access": {
-        "title": "Credentials: {{name}}",
+        "intro": "Your personal credentials for every environment you have an account in. They appear here as soon as a deployment has finished.",
+        "empty": "No credentials yet",
+        "emptyHint": "As soon as an environment you have access to is deployed, your credentials for it appear here.",
         "show": "Credentials",
         "username": "User",
         "address": "Address",
         "password": "Password",
         "key": "Key",
-        "copy": "Copy",
-        "none": "There are no credentials for this environment yet – either the deployment is still running, or the app issues no personal accounts."
+        "copy": "Copy"
     }
 }

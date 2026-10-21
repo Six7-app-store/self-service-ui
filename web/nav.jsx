@@ -105,6 +105,9 @@ export function useNav() {
                 // The same list either way; a student only ever sees the
                 // environments a teacher gave them access to.
                 { label: t(appStoreStaff ? 'appStore.deployments' : 'appStore.myEnvironments'), href: '/app-store/deployments' },
+                // For everyone: a teacher can hold an account in an
+                // environment too. The page shows only the user's own.
+                { label: t('appStore.myAccess'), href: '/app-store/my-access' },
             ],
         },
     ].filter(Boolean).map(s => ({ ...s, href: s.href ?? s.items[0]?.href ?? '/' }));

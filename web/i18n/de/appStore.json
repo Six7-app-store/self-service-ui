@@ -3,6 +3,7 @@
     "catalog": "App-Katalog",
     "deployments": "Deployments",
     "myEnvironments": "Meine Umgebungen",
+    "myAccess": "My Access",
     "introStaff": "Anwendungen für Studium und Lehre entdecken und in der DHBW-Cloud bereitstellen.",
     "introStudent": "Anwendungen, die deine Lehrenden für dich in der DHBW-Cloud bereitstellen können.",
     "search": "Apps suchen",
@@ -39,7 +40,7 @@
     "manage": "Apps verwalten",
     "missingLink": "Die Adresse des bestehenden App-Stores ist noch nicht konfiguriert.",
     "deploymentIntroStaff": "Status deiner Bereitstellungen. Solange eine noch läuft, aktualisiert sich die Ansicht von selbst.",
-    "deploymentIntroStudent": "Umgebungen, auf die dich deine Lehrenden berechtigt haben, mit deinen Zugangsdaten.",
+    "deploymentIntroStudent": "Umgebungen, auf die dich deine Lehrenden berechtigt haben. Deine Zugangsdaten findest du unter „My Access“.",
     "noDeployments": "Noch keine Umgebungen",
     "noDeploymentsHintStaff": "Wähle eine App im Katalog, um eine Bereitstellung zu starten.",
     "noDeploymentsHintStudent": "Sobald dich jemand für eine Umgebung einträgt, erscheint sie hier.",
@@ -75,7 +76,7 @@
         "submit": "Jetzt bereitstellen",
         "hint": "Ohne Teams und Eingaben, nur für dich.",
         "noVersions": "Es sind keine bereitstellbaren Versionen abrufbar: Entweder ist noch keine freigegeben, oder das Backend erreicht das Repository der App nicht.",
-        "studentHint": "Umgebungen richten deine Lehrenden ein. Sobald du Zugang hast, findest du sie mit deinen Zugangsdaten unter „Meine Umgebungen“.",
+        "studentHint": "Umgebungen richten deine Lehrenden ein. Sobald eine bereitgestellt ist, findest du deine Zugangsdaten unter „My Access“.",
         "credentialsMissingTitle": "OpenStack-Zugang fehlt",
         "credentialsMissing": "Zum Bereitstellen brauchst du hinterlegte OpenStack-Zugangsdaten.",
         "openCredentials": "Zugangsdaten hinterlegen",
@@ -83,13 +84,14 @@
         "failed": "Bereitstellung fehlgeschlagen"
     },
     "access": {
-        "title": "Zugangsdaten: {{name}}",
+        "intro": "Deine persönlichen Zugangsdaten für alle Umgebungen, in denen du ein Konto hast. Sie erscheinen hier, sobald eine Bereitstellung abgeschlossen ist.",
+        "empty": "Noch keine Zugangsdaten",
+        "emptyHint": "Sobald eine Umgebung, auf die du berechtigt bist, bereitgestellt ist, erscheinen hier deine Zugangsdaten dafür.",
         "show": "Zugangsdaten",
         "username": "Benutzer",
         "address": "Adresse",
         "password": "Passwort",
         "key": "Schlüssel",
-        "copy": "Kopieren",
-        "none": "Für diese Umgebung gibt es noch keine Zugangsdaten – entweder läuft die Bereitstellung noch, oder die App vergibt keine persönlichen Konten."
+        "copy": "Kopieren"
     }
 }

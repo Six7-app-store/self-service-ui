@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
-    accessEntries, createAppStoreApi, deploymentPayload, filterApps, frontendLink, isStaff, plainSummary,
-    quickDeployBlocker, statusColor, versionOptions,
+    accessDenied, accessEntries, createAppStoreApi, deploymentPayload, filterApps, frontendLink, isStaff, plainSummary,
+    isDeployed, quickDeployBlocker, statusColor, versionOptions,
 } from './api.js';
 
 const json = (data, init = {}) => new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' }, ...init });
@@ -121,6 +121,19 @@ describe('access credentials', () => {
     it('treats an empty answer as no credentials, not an error', () => {
         expect(accessEntries({ user_accounts: {}, team_vms: {} })).toEqual([]);
         expect(accessEntries(undefined)).toEqual([]);
+    });
+
+    it('asks for credentials only once a deployment has finished', () => {
+        expect(isDeployed('success')).toBe(true);
+        expect(isDeployed('paused')).toBe(true);
+        for (const status of ['pending', 'running', 'failed', 'destroyed', null]) expect(isDeployed(status)).toBe(false);
+    });
+
+    it('reads 403 and 404 as "not yours", anything else as a failure', () => {
+        expect(accessDenied({ status: 403 })).toBe(true);
+        expect(accessDenied({ status: 404 })).toBe(true);
+        expect(accessDenied({ status: 500 })).toBe(false);
+        expect(accessDenied(new Error('network'))).toBe(false);
     });
 });
 
