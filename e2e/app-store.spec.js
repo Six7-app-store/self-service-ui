@@ -8,7 +8,7 @@ const apps = [
     { appId: 'ubuntu', name: 'Ubuntu Desktop', description: 'Eine Linux-Arbeitsumgebung für Studium und Lehre.', releaseTag: 'v1.0', is_private: false, created_at: '2026-09-01' },
     { appId: 'lab', name: 'Programmierlabor', description: 'Entwicklungsumgebung für praktische Übungen.', releaseTag: 'v2.1', is_private: true, created_at: '2026-09-02' },
 ];
-const appDetail = { ...apps[0], versions: [{ version: 'v1.0', name: 'v1.0', prerelease: 'False' }] };
+const appDetail = { ...apps[0], approvedVersions: ['v1.0'], versions: [{ version: 'v1.0', name: 'v1.0', prerelease: 'False' }] };
 const deployments = [{ deploymentId: 'deployment-1', appId: 'ubuntu', name: 'Linux-Kurs', status: 'success', created_at: '2026-09-29' }];
 const access = { user_accounts: { 'Team-1-anna': { username: 'anna', ip: '10.0.0.5', port: 22, auth: 'geheim', type: 'password', protocol: 'ssh' } }, team_vms: {} };
 

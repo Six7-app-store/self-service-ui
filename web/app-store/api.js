@@ -185,12 +185,13 @@ export function statusColor(status) {
 
 /**
  * versionOptions lists the tags a deployment can be created from, stable
- * releases first. The backend already filters to approved tags for anyone but
- * the owner or an admin; an entry is a dict with the tag under `version`.
+ * releases first. Only tags listed in the backend's approval list are offered.
  */
-export function versionOptions(versions) {
-    return (versions ?? [])
-        .filter(v => v && typeof v.version === 'string' && v.version)
+export function versionOptions(versions, approvedVersions = []) {
+    const available = new Map((versions ?? []).filter(v => v && typeof v.version === 'string').map(v => [v.version, v]));
+    return [...new Set(approvedVersions ?? [])]
+        .filter(tag => typeof tag === 'string' && tag)
+        .map(tag => available.get(tag) ?? { version: tag })
         .map(v => ({ value: v.version, label: v.name && v.name !== v.version ? `${v.version} – ${v.name}` : v.version, prerelease: v.prerelease === 'True' }))
         .sort((a, b) => Number(a.prerelease) - Number(b.prerelease));
 }

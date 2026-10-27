@@ -36,7 +36,7 @@ function DeployError({ error }) {
 function DeployPanel({ app }) {
     const { t } = useTranslation();
     const [, navigate] = useLocation();
-    const versions = versionOptions(app.versions);
+    const versions = versionOptions(app.versions, app.approvedVersions);
     const [version, setVersion] = useState(versions[0]?.value ?? null);
     const [name, setName] = useState(app.name);
     const variables = useAppVariables(app.appId, version);
@@ -57,7 +57,7 @@ function DeployPanel({ app }) {
     }
 
     const blocker = variables.isSuccess ? quickDeployBlocker(variables.data) : null;
-    const ready = variables.isSuccess && !blocker && name.trim() !== '';
+    const ready = versions.some(item => item.value === version) && variables.isSuccess && !blocker && name.trim() !== '';
 
     return (
         <Stack gap="md">
