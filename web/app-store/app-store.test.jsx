@@ -16,7 +16,7 @@ const APPS = [
     { appId: 'ubuntu', name: 'Ubuntu Desktop', description: 'Linux for courses', releaseTag: 'v1.0', is_private: false, created_at: '2026-09-01' },
     { appId: 'lab', name: 'Programming lab', description: '', releaseTag: 'v2.1', is_private: true, created_at: '2026-09-02' },
 ];
-const APP = { ...APPS[0], git_link: 'https://github.com/example/ubuntu', versions: [{ version: 'v1.0', name: 'v1.0', prerelease: 'False' }] };
+const APP = { ...APPS[0], git_link: 'https://github.com/example/ubuntu', approvedVersions: ['v1.0'], versions: [{ version: 'v1.0', name: 'v1.0', prerelease: 'False' }] };
 const DEPLOYMENTS = [{ deploymentId: 'd1', appId: 'ubuntu', name: 'Linux course', status: 'success', created_at: '2026-09-29' }];
 const ACCESS = { user_accounts: { 'Team-1-anna': { username: 'anna', ip: '10.0.0.5', port: 22, auth: 's3cret', type: 'password', protocol: 'ssh' } }, team_vms: {} };
 
