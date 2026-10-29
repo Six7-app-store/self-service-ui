@@ -86,9 +86,15 @@ describe('one-click deployment', () => {
             { version: 'v2.0-rc1', name: 'v2.0-rc1', prerelease: 'True' },
             { version: 'v1.0', name: 'First', prerelease: 'False' },
             { name: 'no tag' },
-        ]);
+        ], ['v1.0', 'v2.0-rc1']);
         expect(options.map(o => o.value)).toEqual(['v1.0', 'v2.0-rc1']);
         expect(options[0].label).toBe('v1.0 – First');
+    });
+
+    it('does not offer tags without approval', () => {
+        expect(versionOptions([{ version: 'v1' }, { version: 'unreviewed' }], ['v1']).map(v => v.value)).toEqual(['v1']);
+        expect(versionOptions([{ version: 'unreviewed' }])).toEqual([]);
+        expect(versionOptions([], ['v1']).map(v => v.value)).toEqual(['v1']);
     });
 
     it('allows variables that have a default, and nothing that needs input', () => {
